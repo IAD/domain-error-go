@@ -37,3 +37,12 @@ lint:
 
 test:
 	go test ./...
+
+public-docker-generate:
+	docker run --rm -v $(PWD):$(PWD) -w $(PWD) -u `id -u $(USER)` \
+	-e ERRORS_YAML_FILE_PATH=api/errors.yaml \
+	-e ERRORS_TARGET_DIR=pkg/log2 \
+	-e ERRORS_TARGET_FILENAME=app-errors.gen.go \
+	-e ERRORS_PACKAGE_NAME=log2 \
+	docker.io/iadolgov/domain-error-go /app/run
+	goimports -w pkg/log2/app-errors.gen.go

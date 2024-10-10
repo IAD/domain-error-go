@@ -19,7 +19,8 @@ You can use the following commands defined in the Makefile
 	-e ERRORS_TARGET_DIR=pkg/log2 \
 	-e ERRORS_TARGET_FILENAME=app-errors.gen.go \
 	-e ERRORS_PACKAGE_NAME=log2 \
-	iadolgov/domain-error-go /app/run
+	docker.io/iadolgov/domain-error-go /app/run
+	goimports -w pkg/log2/app-errors.gen.go
 ```
 
 ## Contributing
