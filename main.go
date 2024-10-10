@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"gopkg.in/yaml.v2"
 	"html/template"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 type listOfErrorCodes []string
@@ -129,16 +128,12 @@ func main() {
 		if err != nil {
 			log.Fatalf("unable to close the file '%s'. Err: %s", targetFullFilename, err)
 		}
-
-		//err = exec.Command("goimports", "-w", targetFullFilename).Start()
-		//if err != nil {
-		//	log.Printf("unable format file '%s'. Err: %s", targetFullFilename, err)
-		//}
 	}()
 
 	errorTpl := `package {{ .PackageName }}
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -149,12 +144,12 @@ const (
 )
 
 type DomainError struct {
-	Text       string         				` + "`json:\"text\"`" + `
-	Code   	   string         				` + "`json:\"code\"`" + `
-	Attributes DomainErrorAttributes		` + "`json:\"attributes\"`" + `
-	Error      string						` + "`json:\"error\"`" + `
+	Text       string                ` + "`json:\"text\"`" + `
+	Code   	   string                ` + "`json:\"code\"`" + `
+	Attributes DomainErrorAttributes ` + "`json:\"attributes\"`" + `
+	Error      string                ` + "`json:\"error\"`" + `
 }
-	
+
 func (de DomainError) String() string {
 	text := de.Text
 	for key, value := range de.Attributes {
@@ -164,7 +159,7 @@ func (de DomainError) String() string {
 	if de.Error != "" {
 		text += ": " + de.Error
 	}
-	
+
 	return text
 }
 
@@ -172,7 +167,7 @@ type DomainErrorAttributes map[string]string
 
 func toErrStr(errs []error) string {
 	str := ""
-	
+
 	for i, err := range errs {
 		if err != nil {
 			if i > 0 {
@@ -188,40 +183,40 @@ func toErrStr(errs []error) string {
 {{- range .Elements }}
 
 // New{{ .UpperErrorCode }} generated from the code "{{ .ErrorCode }}".
-func New{{ .UpperErrorCode }}({{ range .Attributes }}{{ .Name }} {{ .Type }}, {{ end }} errs ...error) *DomainError {
+func New{{ .UpperErrorCode }}({{ range .Attributes }}{{ .Name }} {{ .Type }}, {{ end }}errs ...error) *DomainError {
 	if len(errs) > 0 && errs[0] == nil {
 		return nil
 	}
 
 	return &DomainError{
-		Text: "{{ .Text }}",
-		Code: {{ .UpperErrorCode }},
+		Text:       "{{ .Text }}",
+		Code:       {{ .UpperErrorCode }},
 		Attributes: DomainErrorAttributes{
 {{- range .Attributes }}
-	"{{ .Name }}": fmt.Sprintf("{{ .Formatter }}", {{ .Name }}),
+			"{{ .Name }}": fmt.Sprintf("{{ .Formatter }}", {{ .Name }}),
 {{- end }}
 		},
-		Error: toErrStr(errs),
+		Error:      toErrStr(errs),
 	}
 }
 {{- end }}
 
 type DomainErrorDeclaration struct {
-    ErrorCode   string
-    Text       string
-    Attributes []string
+	ErrorCode  string
+	Text       string
+	Attributes []string
 }
 
 func GetDomainErrors() []DomainErrorDeclaration {
-    return []DomainErrorDeclaration{
-    {{- range .Elements }}
-        {
-            ErrorCode:   "{{ .ErrorCode }}",
-            Text:       "{{ .Text }}",
-            Attributes: []string{ {{- range .Attributes }}"{{.Name}}", {{- end }} },
-        },
-    {{- end }}
-    }
+	return []DomainErrorDeclaration{
+	{{- range .Elements }}
+		{
+			ErrorCode:  "{{ .ErrorCode }}",
+			Text:       "{{ .Text }}",
+			Attributes: []string{ {{- range .Attributes }}"{{.Name}}", {{- end }} },
+		},
+	{{- end }}
+	}
 }
 `
 
