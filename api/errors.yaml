@@ -1,0 +1,14 @@
+types:
+  int: int
+  err: error
+  reason: int64
+default: string
+messages:
+  InternalServiceError:
+    text: "internal service error"
+  DetailedInternalServiceError:
+    types:
+      reason: string
+    text: "internal service error. Reason {{reason}}"
+  DetailedNumericInternalServiceError:
+    text: "internal service error. Reason {{ reason }}"
