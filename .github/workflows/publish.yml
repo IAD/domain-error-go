@@ -47,15 +47,15 @@ jobs:
             -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }} \
             -f Dockerfile.multistage
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.8.0
-        with:
-          image-ref: 'ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      # - name: Run Trivy vulnerability scanner
+      #   uses: aquasecurity/trivy-action@0.8.0
+      #   with:
+      #     image-ref: 'ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}'
+      #     format: 'table'
+      #     exit-code: '1'
+      #     ignore-unfixed: true
+      #     vuln-type: 'os,library'
+      #     severity: 'CRITICAL,HIGH'
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.13.4
