@@ -46,7 +46,8 @@ jobs:
         run: |
           docker build . \
             -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:latest \
-            -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}
+            -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }} \
+            -f Dockerfile.multistage
 
       - name: Push Docker image
         run: |
