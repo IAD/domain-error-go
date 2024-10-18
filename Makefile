@@ -36,7 +36,7 @@ lint:
 	golangci-lint run -v --fix
 
 test:
-	go test ./...
+	go test ./... -json
 
 public-docker-generate:
 	docker run --rm -v $(PWD):$(PWD) -w $(PWD) -u `id -u $(USER)` \
