@@ -1,15 +1,19 @@
 name: Build and Publish Docker Image to GHCR
 
 on:
+#  pull_request:
+#    branches:
+#      - main
+#    types:
+#      - closed
+  push:
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
-    types:
-      - closed
+    branches: [ main ]
 
 jobs:
   build-and-publish:
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -32,13 +36,20 @@ jobs:
           VERSION=$(git describe --tags --always)
           echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
 
+      - name: Prepare Docker image name
+        id: prep
+        run: |
+          IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+
       - name: Build Docker image
         run: |
           docker build . \
-            -t ghcr.io/${{ github.repository }}/domain-error-go:latest \
-            -t ghcr.io/${{ github.repository }}/domain-error-go:${{ steps.get_version.outputs.VERSION }}
+            -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:latest \
+            -t ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }} \
+            -f Dockerfile.multistage
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository }}/domain-error-go:latest
-          docker push ghcr.io/${{ github.repository }}/domain-error-go:${{ steps.get_version.outputs.VERSION }}
+          docker push ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:latest
+          docker push ghcr.io/${{ steps.prep.outputs.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}
