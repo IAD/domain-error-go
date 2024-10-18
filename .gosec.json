@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "G203",
+    "G304"
+  ],
+  "severity": {
+    "G101": "medium",
+    "G102": "high"
+  },
+  "rules": {
+    "G101": true,
+    "G102": true,
+    "G203": false,
+    "G304": false
+  }
+}
