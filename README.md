@@ -1,14 +1,17 @@
 # Domain Error Generator
 
-This project provides a tool for generating domain error definitions in Go from a YAML file. It includes commands for building, generating, linting, and testing the application.
+This project provides a tool for generating domain error definitions in Go from a YAML file. It includes commands for building, generating, linting, and testing the application, as well as GitHub Actions for continuous integration and deployment.
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Makefile Commands](#makefile-commands)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Installation
+
+To install the project, clone the repository and ensure you have Docker installed on your system.
 
 ## Usage
 
@@ -16,10 +19,10 @@ You can use the following commands defined in the Makefile
 ```shell
 	docker run --rm -v $(PWD):$(PWD) -w $(PWD) -u `id -u $(USER)` \
 	-e ERRORS_YAML_FILE_PATH=api/errors.yaml \
-	-e ERRORS_TARGET_DIR=pkg/log2 \
+	-e ERRORS_TARGET_DIR=gen/log2 \
 	-e ERRORS_TARGET_FILENAME=app-errors.gen.go \
 	-e ERRORS_PACKAGE_NAME=log2 \
-	docker.io/iadolgov/domain-error-go /app/run
+	ghcr.io/iad/domain-error-go /app/run
 	goimports -w pkg/log2/app-errors.gen.go
 ```
 
