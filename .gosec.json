@@ -1,0 +1,14 @@
+{
+  "exclude": [
+    "G203"  // Exclude the G203 warning if you have handled it appropriately
+  ],
+  "severity": {
+    "G101": "medium",  // Set severity levels for specific checks
+    "G102": "high"
+  },
+  "rules": {
+    "G101": true,  // Enable specific rules
+    "G102": true,
+    "G203": false  // Disable G203 if you want to ignore it
+  }
+}
