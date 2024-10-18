@@ -1,15 +1,19 @@
 name: Build and Publish Docker Image to GHCR
 
 on:
+#  pull_request:
+#    branches:
+#      - main
+#    types:
+#      - closed
+  push:
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
-    types:
-      - closed
+    branches: [ main ]
 
 jobs:
   build-and-publish:
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
