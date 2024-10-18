@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	"gopkg.in/yaml.v2"
 	"html/template"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type listOfErrorCodes []string
@@ -231,7 +232,7 @@ func GetDomainErrors() []DomainErrorDeclaration {
 		}{
 			PackageName: envVars.PackageName,
 			Elements:    items,
-			RawFileBody: template.HTML(rawErrorDataJSON), //nolint:gosec
+			RawFileBody: template.HTML(template.HTMLEscapeString(string(rawErrorDataJSON))), //nolint:gosec
 		},
 	)
 	if err != nil {
